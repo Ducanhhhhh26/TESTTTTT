@@ -387,13 +387,15 @@ Mở Terminal SSH vào máy ảo (`danh@Server:~$`) và thao tác:
 sudo usermod -aG docker $USER
 sudo chmod 666 /var/run/docker.sock
 
-# 2. Vào thư mục dự án (hoặc clone về repo mới TESTTTTT):
-# Nếu chưa clone repo TESTTTTT về máy ảo:
+# 2. Đồng bộ mã nguồn chuẩn repo TESTTTTT:
+# Cách chuẩn và sạch sẽ nhất (tránh lỗi thiếu file student.env):
+cd ~
+rm -rf TESTTTTT
 git clone https://github.com/Ducanhhhhh26/TESTTTTT.git
 cd TESTTTTT
 
-# (Lưu ý: Nếu trước đó đã clone rồi thì chỉ cần vào thư mục và lấy code mới nhất):
-# cd ~/TESTTTTT && git pull origin main
+# (Hoặc nếu đang đứng trong ~/TESTTTTT, chạy lệnh này để cập nhật mã nguồn mới nhất):
+# git fetch origin main && git reset --hard origin/main
 
 # 3. Khởi động các container:
 docker compose --env-file student.env up -d --build
@@ -436,6 +438,7 @@ Chụp và lưu 4 tệp ảnh vào cả 2 thư mục `screenshots/` và `submiss
 
 | Hiện tượng lỗi | Nguyên nhân | Cách khắc phục ngay lập tức |
 | :--- | :--- | :--- |
+| `couldn't find env file: .../student.env` | Thư mục repo trên máy ảo bị cũ hoặc chưa kéo đủ file mã nguồn | Chạy: `cd ~/TESTTTTT && git fetch origin main && git reset --hard origin/main` hoặc `cd ~ && rm -rf TESTTTTT && git clone https://github.com/Ducanhhhhh26/TESTTTTT.git` |
 | `permission denied while trying to connect to Docker daemon socket` | User `danh` chưa có quyền đọc ghi socket Docker | Chạy lệnh: `sudo chmod 666 /var/run/docker.sock` |
 | `curl: (56) Recv failure: Connection reset by peer` | Container `app` chưa khởi động xong hoặc chưa healthy | Chờ 15–20 giây cho MySQL khởi tạo bảng xong hoặc kiểm tra `docker compose logs app` |
 | GitHub Action SSH fail ở bước `drone-ssh` | Sai SSH Key hoặc file `authorized_keys` sai quyền | Kiểm tra `chmod 600 ~/.ssh/authorized_keys` và `chmod 755 /home/danh` |
